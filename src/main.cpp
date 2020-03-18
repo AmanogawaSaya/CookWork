@@ -30,6 +30,8 @@ void inputCheck(ifstream& fileIn, int& x1, int& y1, int& x2, int& y2) {
 	fileIn >> temp;
 	if (!isNum(temp)) throw INException();
 	y2 = atoi(temp.c_str());
+	if (x1 == x2 && y1 == y2) throw DSException();
+	if (!rangeVaild(x1) || !rangeVaild(y1) || !rangeVaild(x2) || !rangeVaild(y2)) throw INException();
 }
 
 void inputCheck(ifstream& fileIn, int& x, int& y, int& r) {
@@ -43,10 +45,12 @@ void inputCheck(ifstream& fileIn, int& x, int& y, int& r) {
 	fileIn >> temp;
 	if (!isNum(temp)) throw INException();
 	r = atoi(temp.c_str());
+	if (!rangeVaild(x) || !rangeVaild(y)) throw INException();
+	if (r <= 0 || r >= 100000) throw RIException();
 }
 
 // calculate the intersections of two lines
-Point* calLineLineIst(Line line1, Line line2, MySet& points) {
+Point* calLineLineIst(Line line1, Line line2) {
 	int D;
 
 	D = line1.a * line2.b - line2.a * line1.b;
@@ -64,18 +68,18 @@ Point* calLineLineIst(Line line1, Line line2, MySet& points) {
 }
 
 // calculate the intersections of line and Circle
-void calLineCircleIst(Line line, Circle circle, MySet& points) {
+vector<Point> calLineCircleIst(Line line, Circle circle) {
 	int intercept;
+	vector<Point> output;
 
 	intercept = (int)(pow(circle.r, 2) -
 		pow(line.a * circle.x + line.b * circle.y + line.c, 2) / (pow(line.a, 2) + pow(line.b, 2)));
 
 	if (intercept < 0) {
-		return;
+		return output;
 	}
 
 	Line tLine(line.b, -line.a, line.a * circle.y - line.b * circle.x);
-
 	int D;
 	D = tLine.a * line.b - line.a * tLine.b;
 
@@ -88,7 +92,7 @@ void calLineCircleIst(Line line, Circle circle, MySet& points) {
 	switch (intercept)
 	{
 	case 0:	// line is tangent to circle
-		points.insert(tPoint);
+		output.push_back(tPoint);
 		break;
 
 	default:// line passes through circle
@@ -112,32 +116,34 @@ void calLineCircleIst(Line line, Circle circle, MySet& points) {
 			tPoint.x - vecX * offset,
 			tPoint.y - vecY * offset
 		};
-		points.insert(ist1);
-		points.insert(ist2);
+		output.push_back(ist1);
+		output.push_back(ist2);
 		break;
 	}
+	return output;
 }
 
 // calculate intersections of two circles
-void calCircleCircleIst(Circle circle1, Circle circle2, MySet& points) {
+vector<Point> calCircleCircleIst(Circle circle1, Circle circle2) {
 	int radiusSum;
 	int radiusDiff;
 	int centerDis;
 
+	vector<Point> point;
 	radiusSum = (int)pow(circle1.r + circle2.r, 2);
 	radiusDiff = (int)pow(circle1.r - circle2.r, 2);
 	centerDis = (int)(pow(circle1.x - circle2.x, 2) + pow(circle1.y - circle2.y, 2));
 
 	// not intersect
 	if (centerDis > radiusSum || centerDis < radiusDiff) {
-		return;
+		return point;
 	}
 
 	// line passes both two intersections of circles
 	Line line(circle1.d - circle2.d, circle1.e - circle2.e, circle1.f - circle2.f);
 
 	// the intersections of two circles are also the intersections of line and circle
-	calLineCircleIst(line, circle1, points);
+	return calLineCircleIst(line, circle1);
 }
 
 int main(int argc, char* argv[]) {
@@ -176,6 +182,8 @@ int main(int argc, char* argv[]) {
 	int x = 0, y = 0, r = 0;
 	Line line;
 	Circle circle;
+	Ray ray;
+	Segment segment;
 	vector<Line> lines;
 	vector<Ray> rays;
 	vector<Segment> segments;
@@ -196,34 +204,85 @@ int main(int argc, char* argv[]) {
 			switch (type) {
 			case 'L':
 				inputCheck(fileIn, x1, y1, x2, y2);
-				if (x1 == x2 && y1 == y2) throw DSException();
-				if (!rangeVaild(x1) || !rangeVaild(y1) || !rangeVaild(x2) || !rangeVaild(y2)) throw INException();
-
 				line = Line(x1, y1, x2, y2);
 				for (Line it : lines) {
-					calLineLineIst(line, it, points);
+					points.insert(*calLineLineIst(line, it));
+				}
+				for (Ray it : rays) {
+					Point temp = *calLineLineIst(line, it);
+					if (it.vaild(temp)) points.insert(temp);
+				}
+				for (Segment it : segments) {
+					Point temp = *calLineLineIst(line, it);
+					if (it.vaild(temp)) points.insert(temp);
 				}
 				for (Circle it : circles) {
-					calLineCircleIst(line, it, points);
+					vector<Point> temp =  calLineCircleIst(line, it);
+					for (Point i : temp) points.insert(i);
 				}
 				lines.emplace_back(line);
 				break;
 			case 'R':
-
-			case 'S':
-
+				inputCheck(fileIn, x1, y1, x2, y2);
+				ray = Ray(x1, y1, x2, y2);
+				for (Line it : lines) {
+					Point temp = *calLineLineIst(line, it);
+					if (ray.vaild(temp)) points.insert(temp);
+				}
+				for (Ray it : rays) {
+					Point temp = *calLineLineIst(line, it);
+					if (it.vaild(temp) && ray.vaild(temp)) points.insert(temp);
+				}
+				for (Segment it : segments) {
+					Point temp = *calLineLineIst(line, it);
+					if (it.vaild(temp) && ray.vaild(temp)) points.insert(temp);
+				}
+				for (Circle it : circles) {
+					vector<Point> temp = calLineCircleIst(line, it);
+					for (Point i : temp) if(ray.vaild(i)) points.insert(i);
+				}
+				rays.emplace_back(ray);
+				break;
+			case 'S':				
+				inputCheck(fileIn, x1, y1, x2, y2);
+				segment = Segment(x1, y1, x2, y2);
+				for (Line it : lines) {
+					Point temp = *calLineLineIst(line, it);
+					if (segment.vaild(temp)) points.insert(temp);
+				}
+				for (Ray it : rays) {
+					Point temp = *calLineLineIst(line, it);
+					if (it.vaild(temp) && segment.vaild(temp)) points.insert(temp);
+				}
+				for (Segment it : segments) {
+					Point temp = *calLineLineIst(line, it);
+					if (it.vaild(temp) && segment.vaild(temp)) points.insert(temp);
+				}
+				for (Circle it : circles) {
+					vector<Point> temp = calLineCircleIst(line, it);
+					for (Point i : temp) if (segment.vaild(i)) points.insert(i);
+				}
+				segments.emplace_back(segment);
+				break;
 			case 'C':
 				inputCheck(fileIn, x, y, r);
-				if (!rangeVaild(x) || !rangeVaild(y)) throw INException();
-				if (r <= 0 || r >= 100000) throw RIException();
-
 				circle = Circle(x, y, r);
 				for (Line it : lines) {
-					calLineCircleIst(it, circle, points);
+					vector<Point> temp = calLineCircleIst(it, circle);
+					for (Point i : temp) points.insert(i);
+				}
+				for (Ray it : rays) {
+					vector<Point> temp = calLineCircleIst(it, circle);
+					for (Point i : temp) if (it.vaild(i)) points.insert(i);
+				}
+				for (Segment it : segments) {
+					vector<Point> temp = calLineCircleIst(it, circle);
+					for (Point i : temp) if (it.vaild(i)) points.insert(i);
 				}
 				for (Circle it : circles) {
 					if (it.x == circle.x && it.y == circle.y && it.r == circle.r) throw SLException();
-					calCircleCircleIst(it, circle, points);
+					vector<Point> temp = calCircleCircleIst(it, circle);
+					for (Point i : temp) points.insert(i);
 				}
 				circles.emplace_back(circle);
 				break;

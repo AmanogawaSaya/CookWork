@@ -74,6 +74,8 @@ public:
 		else type = 0;
 	}
 
+	Ray() : Line(){}
+
 	bool vaild(Point A) {
 		return type == 1 && startPoint.x < A.x && startPoint.y < A.y
 			|| type == 2 && startPoint.x < A.x && startPoint.y > A.y
@@ -88,6 +90,7 @@ class Segment : public Ray {
 public:
 	struct Point endPoint;
 
+	Segment() : Ray(){}
 	Segment(int x1, int y1, int x2, int y2) : Ray(x1, y1, x2, y2) {
 		endPoint = Point(x2, y2);
 	}
@@ -103,8 +106,7 @@ public:
 };
 
 //hash of point set
-struct PointHash
-{
+struct PointHash {
 	std::size_t operator()(const Point& point) const
 	{
 		return std::hash<double>()(point.x) + (std::hash<double>()(point.y) << 16);
@@ -118,11 +120,11 @@ bool rangeVaild(int n);
 void inputCheck(ifstream& fileIn, int& x1, int& y1, int& x2, int& y2);
 void inputCheck(ifstream& fileIn, int& x, int& y, int& r);
 // calculate the intersections of two lines
-Point* calLineLineIst(Line line1, Line line2, MySet& points);
+Point* calLineLineIst(Line line1, Line line2);
 
 // calculate the intersections of line and Circle
-void calLineCircleIst(Line line, Circle circle, MySet& points);
+vector<Point> calLineCircleIst(Line line, Circle circle);
 
 // calculate intersections of two circles
-void calCircleCircleIst(Circle circle1, Circle circle2, MySet& points);
+vector<Point> calCircleCircleIst(Circle circle1, Circle circle2);
 
