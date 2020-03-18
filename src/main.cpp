@@ -3,28 +3,29 @@
 
 using namespace std;
 
+bool isNum(string s) {
+	if (s == "0") return true;
+	if (s[0] == '0') return false;
+	for (auto i : s) {
+		if (!(i >= '0' && i <= '9')) return false;
+	}
+	return true;
+}
+
 // calculate the intersections of two lines
 void calLineLineIst(Line& line1, Line& line2, MySet& points) {
 	int D;
 
 	D = line1.a * line2.b - line2.a * line1.b;
-
-	switch (D)
-	{
-	case 0:	// parallel
-		break;
-	default:
-		//	line1: a1*x+b1*x+c1=0, line2: a2*x+b2*x+c2=0
-		//	==> x=(b1*c2-b2*c1)/(a1*b2-a2*b1),
-		//		y=(a2*c1-a1*c2)/(a1*b2-a2*b1)
-		//	let D=a1*b2-a2*b1
-		//	==> x=(b1*c2-b2*c1)/D, y=(a2*c1-a1*c2)/D
+	if (D == 0) {
+		if (line1.a * line2.c == line1.c * line2.a) throw SLException();
+	}
+	else {
 		Point point = {
 			(double)((double)line1.b * (double)line2.c - (double)line2.b * (double)line1.c) / (double)D,
 			(double)((double)line2.a * (double)line1.c - (double)line1.a * (double)line2.c) / (double)D
 		};
 		points.insert(point);
-		break;
 	}
 }
 
@@ -146,7 +147,7 @@ int main(int argc, char* argv[]) {
 	fileIn = ifstream("input.txt");
 	fileOut = ofstream("output.txt");
 	
-	string N;
+	int N;
 	char type;
 	int x1, y1;
 	int x2, y2;
@@ -161,7 +162,10 @@ int main(int argc, char* argv[]) {
 	MySet points;
 	
 	try {
-		fileIn >> N;
+		string temp;
+		fileIn >> temp;
+		if (!isNum(temp)) throw INException();
+		N = atoi(temp.c_str());
 		if (N < 2) throw TFException();
 
 		for (int i = 0; i < N; i++) {
@@ -169,8 +173,22 @@ int main(int argc, char* argv[]) {
 			switch (type)
 			{
 			case 'L':
-				fileIn >> x1 >> y1 >> x2 >> y2;
+				fileIn >> temp;
+				if(!isNum(temp)) throw INException();
+				x1 = atoi(temp.c_str());
+				fileIn >> temp;
+				if (!isNum(temp)) throw INException();
+				y1 = atoi(temp.c_str());
+				fileIn >> temp;
+				if (!isNum(temp)) throw INException();
+				x2 = atoi(temp.c_str());
+				fileIn >> temp;
+				if (!isNum(temp)) throw INException();
+				y2 = atoi(temp.c_str());
+
 				if (x1 == x2 && y1 == y2) throw DSException();
+				if (x1 >= 100000 || x2 >= 100000 || y1 >= 100000 || y2 >= 100000) throw INException();
+
 				line = Line(x1, y1, x2, y2);
 				for (Line it : lines) {
 					calLineLineIst(line, it, points);
@@ -181,13 +199,25 @@ int main(int argc, char* argv[]) {
 				lines.emplace_back(line);
 				break;
 			case 'C':
-				fileIn >> x >> y >> r;
-				if (r < 0) throw REException();
+				fileIn >> temp;
+				if(!isNum(temp)) throw INException();
+				x = atoi(temp.c_str());
+				fileIn >> temp;
+				if (!isNum(temp)) throw INException();
+				y = atoi(temp.c_str());
+				fileIn >> temp;
+				if (!isNum(temp)) throw INException();
+				r = atoi(temp.c_str());
+
+				if (x >= 100000 ||  y >= 100000) throw INException();
+				if (r <= 0 || r >= 100000) throw RIException();
+
 				circle = Circle(x, y, r);
 				for (Line it : lines) {
 					calLineCircleIst(it, circle, points);
 				}
 				for (Circle it : circles) {
+					if (it.x == circle.x && it.y == circle.y && it.r == circle.r) throw SLException();
 					calCircleCircleIst(it, circle, points);
 				}
 				circles.emplace_back(circle);
@@ -197,12 +227,26 @@ int main(int argc, char* argv[]) {
 				break;
 			}
 		}
+		fileOut << points.size();
 	}
-	catch () {
-
+	catch (INException e) {
+		cout << e.info() << endl;
 	}
-
-	fileOut << points.size();
+	catch (TFException e) {
+		cout << e.info() << endl;
+	}
+	catch (DSException e) {
+		cout << e.info() << endl;
+	}
+	catch (SLException e) {
+		cout << e.info() << endl;
+	}
+	catch (TException e) {
+		cout << e.info() << endl;
+	}
+	catch (RIException e) {
+		cout << e.info() << endl;
+	}
 
 	//cout << "Finish!!!   Result is in \"" << fout_name << "\"";
 	return 0;

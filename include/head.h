@@ -5,6 +5,7 @@
 #include <cmath>
 #include <vector>
 #include <set>
+#include<string>
 #include <unordered_set>
 
 #define EPS 1e-7
@@ -50,7 +51,6 @@ public:
 		b(x2 - x1),
 		c(x1* y2 - x2 * y1)
 	{}
-
 };
 
 // Circle: (x-x0)^2 + (y-y0)^2 = r0^2, x^2 + y^2 + dx + ey + f = 0
@@ -86,6 +86,7 @@ struct PointHash
 
 typedef std::unordered_set<Point, PointHash> MySet;
 
+bool isNum(std::string s);
 // calculate the intersections of two lines
 void calLineLineIst(Line& line1, Line& line2, MySet& points);
 

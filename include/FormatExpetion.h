@@ -19,19 +19,11 @@ public:
 	}
 };
 
-/*RangeExceeded*/
-class REException : public exception {
-public:
-	const string info() const throw() {
-		return "坐标范围超限，请输入(-100000, 100000)之间的数";
-	}
-};
-
 /*Same Line*/
 class SLException : public exception {
 public:
 	const string info() const throw() {
-		return "有两条直线有无穷的交点";
+		return "有两个几何图形之间有无穷的交点";
 	}
 };
 
@@ -55,6 +47,6 @@ public:
 class RIException : public exception {
 public:
 	const string info() const throw() {
-		return "圆的半径不可以小于0";
+		return "圆的半径不可以小于或等于0或者大于或等于100000";
 	}
 };
