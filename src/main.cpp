@@ -33,30 +33,23 @@ void calLineLineIst(Line& line1, Line& line2, MySet& points) {
 void calLineCircleIst(Line& line, Circle& circle, MySet& points) {
 	int intercept;
 
-	// intercept=r^2-d^2=r^2-(ax+by+c)^2/(a^2+b^2)
 	intercept = (int)(pow(circle.r, 2) -
 		pow(line.a * circle.x + line.b * circle.y + line.c, 2) / (pow(line.a, 2) + pow(line.b, 2)));
 
-	// not intersect
 	if (intercept < 0) {
 		return;
 	}
 
-	// tLine is perpendicular to line
-	Line tLine = {
-		line.b,
-		-line.a,
-		line.a * circle.y - line.b * circle.x
-	};
+	Line tLine(line.b, -line.a, line.a * circle.y - line.b * circle.x);
 
 	int D;
 	D = tLine.a * line.b - line.a * tLine.b;
 
 	// tPoint is the intersection of line and tLine
-	Point tPoint = {
+	Point tPoint(
 		(double)((double)tLine.b * (double)line.c - (double)line.b * (double)tLine.c) / (double)D,
 		(double)((double)line.a * (double)tLine.c - (double)tLine.a * +(double)line.c) / (double)D
-	};
+	);
 
 	switch (intercept)
 	{
@@ -107,11 +100,7 @@ void calCircleCircleIst(Circle& circle1, Circle& circle2, MySet& points) {
 	}
 
 	// line passes both two intersections of circles
-	Line line = {
-		circle1.d - circle2.d,
-		circle1.e - circle2.e,
-		circle1.f - circle2.f
-	};
+	Line line(circle1.d - circle2.d, circle1.e - circle2.e, circle1.f - circle2.f);
 
 	// the intersections of two circles are also the intersections of line and circle
 	calLineCircleIst(line, circle1, points);
@@ -156,7 +145,6 @@ int main(int argc, char* argv[]) {
 	Circle circle;
 	vector<Line> lines;
 	vector<Circle> circles;
-
 
 	// set of intersections
 	MySet points;
