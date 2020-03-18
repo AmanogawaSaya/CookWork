@@ -120,7 +120,7 @@ struct PointHash {
 	}
 };
 
-typedef std::unordered_set<Point, PointHash> MySet;
+typedef std::set<Point> MySet;
 
 bool isNum(std::string s);
 bool rangeVaild(int n);
