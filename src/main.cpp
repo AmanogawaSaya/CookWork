@@ -4,12 +4,7 @@
 using namespace std;
 
 bool isNum(string s) {
-	if (s == "0") return true;
-	if (s[0] == '0') return false;
-	for (auto i : s) {
-		if (!(i >= '0' && i <= '9')) return false;
-	}
-	return true;
+	return regex_match(s, regex("(0|-?[1-9]\\d*)"));
 }
 
 bool rangeVaild(int n) {
@@ -226,19 +221,19 @@ int main(int argc, char* argv[]) {
 				inputCheck(fileIn, x1, y1, x2, y2);
 				ray = Ray(x1, y1, x2, y2);
 				for (Line it : lines) {
-					Point temp = *calLineLineIst(line, it);
+					Point temp = *calLineLineIst(ray, it);
 					if (ray.vaild(temp)) points.insert(temp);
 				}
 				for (Ray it : rays) {
-					Point temp = *calLineLineIst(line, it);
+					Point temp = *calLineLineIst(ray, it);
 					if (it.vaild(temp) && ray.vaild(temp)) points.insert(temp);
 				}
 				for (Segment it : segments) {
-					Point temp = *calLineLineIst(line, it);
+					Point temp = *calLineLineIst(ray, it);
 					if (it.vaild(temp) && ray.vaild(temp)) points.insert(temp);
 				}
 				for (Circle it : circles) {
-					vector<Point> temp = calLineCircleIst(line, it);
+					vector<Point> temp = calLineCircleIst(ray, it);
 					for (Point i : temp) if(ray.vaild(i)) points.insert(i);
 				}
 				rays.emplace_back(ray);
@@ -247,19 +242,19 @@ int main(int argc, char* argv[]) {
 				inputCheck(fileIn, x1, y1, x2, y2);
 				segment = Segment(x1, y1, x2, y2);
 				for (Line it : lines) {
-					Point temp = *calLineLineIst(line, it);
+					Point temp = *calLineLineIst(segment, it);
 					if (segment.vaild(temp)) points.insert(temp);
 				}
 				for (Ray it : rays) {
-					Point temp = *calLineLineIst(line, it);
+					Point temp = *calLineLineIst(segment, it);
 					if (it.vaild(temp) && segment.vaild(temp)) points.insert(temp);
 				}
 				for (Segment it : segments) {
-					Point temp = *calLineLineIst(line, it);
+					Point temp = *calLineLineIst(segment, it);
 					if (it.vaild(temp) && segment.vaild(temp)) points.insert(temp);
 				}
 				for (Circle it : circles) {
-					vector<Point> temp = calLineCircleIst(line, it);
+					vector<Point> temp = calLineCircleIst(segment, it);
 					for (Point i : temp) if (segment.vaild(i)) points.insert(i);
 				}
 				segments.emplace_back(segment);
@@ -292,6 +287,10 @@ int main(int argc, char* argv[]) {
 			}
 		}
 		fileOut << points.size();
+		cout << points.size() << endl;
+		for (auto i : points) {
+			cout << i.x << " " << i.y << endl;
+		}
 	}
 	catch (INException e) { cout << e.info() << endl; }
 	catch (TFException e) { cout << e.info() << endl; }

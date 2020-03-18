@@ -8,6 +8,7 @@
 #include<string>
 #include <unordered_set>
 #include<algorithm>
+#include<regex>
 using namespace std;
 
 #define EPS 1e-7
@@ -74,7 +75,9 @@ public:
 		else type = 0;
 	}
 
-	Ray() : Line(){}
+	Ray() : Line(){
+		startPoint = Point();
+	}
 
 	bool vaild(Point A) {
 		return type == 1 && startPoint.x < A.x && startPoint.y < A.y
@@ -90,7 +93,10 @@ class Segment : public Ray {
 public:
 	struct Point endPoint;
 
-	Segment() : Ray(){}
+	Segment() : Ray(){
+		endPoint = Point();
+	}
+
 	Segment(int x1, int y1, int x2, int y2) : Ray(x1, y1, x2, y2) {
 		endPoint = Point(x2, y2);
 	}
