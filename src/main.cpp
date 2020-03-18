@@ -13,7 +13,7 @@ bool isNum(string s) {
 }
 
 // calculate the intersections of two lines
-void calLineLineIst(Line& line1, Line& line2, MySet& points) {
+void calLineLineIst(Line line1, Line line2, MySet& points) {
 	int D;
 
 	D = line1.a * line2.b - line2.a * line1.b;
@@ -30,7 +30,7 @@ void calLineLineIst(Line& line1, Line& line2, MySet& points) {
 }
 
 // calculate the intersections of line and Circle
-void calLineCircleIst(Line& line, Circle& circle, MySet& points) {
+void calLineCircleIst(Line line, Circle circle, MySet& points) {
 	int intercept;
 
 	intercept = (int)(pow(circle.r, 2) -
@@ -85,7 +85,7 @@ void calLineCircleIst(Line& line, Circle& circle, MySet& points) {
 }
 
 // calculate intersections of two circles
-void calCircleCircleIst(Circle& circle1, Circle& circle2, MySet& points) {
+void calCircleCircleIst(Circle circle1, Circle circle2, MySet& points) {
 	int radiusSum;
 	int radiusDiff;
 	int centerDis;
