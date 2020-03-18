@@ -12,20 +12,54 @@ bool isNum(string s) {
 	return true;
 }
 
+bool rangeVaild(int n) {
+	return n > -100000 && n < 100000;
+}
+
+void inputCheck(ifstream& fileIn, int& x1, int& y1, int& x2, int& y2) {
+	string temp;
+	fileIn >> temp;
+	if (!isNum(temp)) throw INException();
+	x1 = atoi(temp.c_str());
+	fileIn >> temp;
+	if (!isNum(temp)) throw INException();
+	y1 = atoi(temp.c_str());
+	fileIn >> temp;
+	if (!isNum(temp)) throw INException();
+	x2 = atoi(temp.c_str());
+	fileIn >> temp;
+	if (!isNum(temp)) throw INException();
+	y2 = atoi(temp.c_str());
+}
+
+void inputCheck(ifstream& fileIn, int& x, int& y, int& r) {
+	string temp;
+	fileIn >> temp;
+	if (!isNum(temp)) throw INException();
+	x = atoi(temp.c_str());
+	fileIn >> temp;
+	if (!isNum(temp)) throw INException();
+	y = atoi(temp.c_str());
+	fileIn >> temp;
+	if (!isNum(temp)) throw INException();
+	r = atoi(temp.c_str());
+}
+
 // calculate the intersections of two lines
-void calLineLineIst(Line line1, Line line2, MySet& points) {
+Point* calLineLineIst(Line line1, Line line2, MySet& points) {
 	int D;
 
 	D = line1.a * line2.b - line2.a * line1.b;
 	if (D == 0) {
 		if (line1.a * line2.c == line1.c * line2.a) throw SLException();
+		return NULL;
 	}
 	else {
-		Point point = {
+		Point* point = new Point{
 			(double)((double)line1.b * (double)line2.c - (double)line2.b * (double)line1.c) / (double)D,
 			(double)((double)line2.a * (double)line1.c - (double)line1.a * (double)line2.c) / (double)D
 		};
-		points.insert(point);
+		return point;
 	}
 }
 
@@ -107,7 +141,6 @@ void calCircleCircleIst(Circle circle1, Circle circle2, MySet& points) {
 }
 
 int main(int argc, char* argv[]) {
-	
 	ifstream fileIn;
 	ofstream fileOut;
 	/*if (argc != 5) {
@@ -138,12 +171,14 @@ int main(int argc, char* argv[]) {
 	
 	int N;
 	char type;
-	int x1, y1;
-	int x2, y2;
-	int x, y, r;
+	int x1 = 0, y1 = 0;
+	int x2 = 0, y2 = 0;
+	int x = 0, y = 0, r = 0;
 	Line line;
 	Circle circle;
 	vector<Line> lines;
+	vector<Ray> rays;
+	vector<Segment> segments;
 	vector<Circle> circles;
 
 	// set of intersections
@@ -158,24 +193,11 @@ int main(int argc, char* argv[]) {
 
 		for (int i = 0; i < N; i++) {
 			fileIn >> type;
-			switch (type)
-			{
+			switch (type) {
 			case 'L':
-				fileIn >> temp;
-				if(!isNum(temp)) throw INException();
-				x1 = atoi(temp.c_str());
-				fileIn >> temp;
-				if (!isNum(temp)) throw INException();
-				y1 = atoi(temp.c_str());
-				fileIn >> temp;
-				if (!isNum(temp)) throw INException();
-				x2 = atoi(temp.c_str());
-				fileIn >> temp;
-				if (!isNum(temp)) throw INException();
-				y2 = atoi(temp.c_str());
-
+				inputCheck(fileIn, x1, y1, x2, y2);
 				if (x1 == x2 && y1 == y2) throw DSException();
-				if (x1 >= 100000 || x2 >= 100000 || y1 >= 100000 || y2 >= 100000) throw INException();
+				if (!rangeVaild(x1) || !rangeVaild(y1) || !rangeVaild(x2) || !rangeVaild(y2)) throw INException();
 
 				line = Line(x1, y1, x2, y2);
 				for (Line it : lines) {
@@ -191,17 +213,8 @@ int main(int argc, char* argv[]) {
 			case 'S':
 
 			case 'C':
-				fileIn >> temp;
-				if(!isNum(temp)) throw INException();
-				x = atoi(temp.c_str());
-				fileIn >> temp;
-				if (!isNum(temp)) throw INException();
-				y = atoi(temp.c_str());
-				fileIn >> temp;
-				if (!isNum(temp)) throw INException();
-				r = atoi(temp.c_str());
-
-				if (x >= 100000 ||  y >= 100000) throw INException();
+				inputCheck(fileIn, x, y, r);
+				if (!rangeVaild(x) || !rangeVaild(y)) throw INException();
 				if (r <= 0 || r >= 100000) throw RIException();
 
 				circle = Circle(x, y, r);
@@ -221,24 +234,12 @@ int main(int argc, char* argv[]) {
 		}
 		fileOut << points.size();
 	}
-	catch (INException e) {
-		cout << e.info() << endl;
-	}
-	catch (TFException e) {
-		cout << e.info() << endl;
-	}
-	catch (DSException e) {
-		cout << e.info() << endl;
-	}
-	catch (SLException e) {
-		cout << e.info() << endl;
-	}
-	catch (TException e) {
-		cout << e.info() << endl;
-	}
-	catch (RIException e) {
-		cout << e.info() << endl;
-	}
+	catch (INException e) { cout << e.info() << endl; }
+	catch (TFException e) { cout << e.info() << endl; }
+	catch (DSException e) { cout << e.info() << endl; }
+	catch (SLException e) { cout << e.info() << endl; }
+	catch (TException e) { cout << e.info() << endl; }
+	catch (RIException e) { cout << e.info() << endl; }
 
 	//cout << "Finish!!!   Result is in \"" << fout_name << "\"";
 	return 0;

@@ -114,9 +114,11 @@ struct PointHash
 typedef std::unordered_set<Point, PointHash> MySet;
 
 bool isNum(std::string s);
-
+bool rangeVaild(int n);
+void inputCheck(ifstream& fileIn, int& x1, int& y1, int& x2, int& y2);
+void inputCheck(ifstream& fileIn, int& x, int& y, int& r);
 // calculate the intersections of two lines
-void calLineLineIst(Line line1, Line line2, MySet& points);
+Point* calLineLineIst(Line line1, Line line2, MySet& points);
 
 // calculate the intersections of line and Circle
 void calLineCircleIst(Line line, Circle circle, MySet& points);
