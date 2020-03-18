@@ -201,15 +201,16 @@ int main(int argc, char* argv[]) {
 				inputCheck(fileIn, x1, y1, x2, y2);
 				line = Line(x1, y1, x2, y2);
 				for (Line it : lines) {
-					points.insert(*calLineLineIst(line, it));
+					Point* temp = calLineLineIst(line, it);
+					if(!temp) points.insert(*temp);
 				}
 				for (Ray it : rays) {
-					Point temp = *calLineLineIst(line, it);
-					if (it.vaild(temp)) points.insert(temp);
+					Point* temp = calLineLineIst(line, it);
+					if (!temp && it.vaild(*temp)) points.insert(*temp);
 				}
 				for (Segment it : segments) {
-					Point temp = *calLineLineIst(line, it);
-					if (it.vaild(temp)) points.insert(temp);
+					Point* temp = calLineLineIst(line, it);
+					if (!temp && it.vaild(*temp)) points.insert(*temp);
 				}
 				for (Circle it : circles) {
 					vector<Point> temp =  calLineCircleIst(line, it);
@@ -221,16 +222,16 @@ int main(int argc, char* argv[]) {
 				inputCheck(fileIn, x1, y1, x2, y2);
 				ray = Ray(x1, y1, x2, y2);
 				for (Line it : lines) {
-					Point temp = *calLineLineIst(ray, it);
-					if (ray.vaild(temp)) points.insert(temp);
+					Point* temp = calLineLineIst(ray, it);
+					if (!temp && ray.vaild(*temp)) points.insert(*temp);
 				}
 				for (Ray it : rays) {
-					Point temp = *calLineLineIst(ray, it);
-					if (it.vaild(temp) && ray.vaild(temp)) points.insert(temp);
+					Point* temp = calLineLineIst(ray, it);
+					if (!temp && it.vaild(*temp) && ray.vaild(*temp)) points.insert(*temp);
 				}
 				for (Segment it : segments) {
-					Point temp = *calLineLineIst(ray, it);
-					if (it.vaild(temp) && ray.vaild(temp)) points.insert(temp);
+					Point* temp = calLineLineIst(ray, it);
+					if (!temp && it.vaild(*temp) && ray.vaild(*temp)) points.insert(*temp);
 				}
 				for (Circle it : circles) {
 					vector<Point> temp = calLineCircleIst(ray, it);
@@ -242,16 +243,16 @@ int main(int argc, char* argv[]) {
 				inputCheck(fileIn, x1, y1, x2, y2);
 				segment = Segment(x1, y1, x2, y2);
 				for (Line it : lines) {
-					Point temp = *calLineLineIst(segment, it);
-					if (segment.vaild(temp)) points.insert(temp);
+					Point *temp = calLineLineIst(segment, it);
+					if (!temp && segment.vaild(*temp)) points.insert(*temp);
 				}
 				for (Ray it : rays) {
-					Point temp = *calLineLineIst(segment, it);
-					if (it.vaild(temp) && segment.vaild(temp)) points.insert(temp);
+					Point* temp = calLineLineIst(segment, it);
+					if (!temp && it.vaild(*temp) && segment.vaild(*temp)) points.insert(*temp);
 				}
 				for (Segment it : segments) {
-					Point temp = *calLineLineIst(segment, it);
-					if (it.vaild(temp) && segment.vaild(temp)) points.insert(temp);
+					Point *temp = calLineLineIst(segment, it);
+					if (!temp && it.vaild(*temp) && segment.vaild(*temp)) points.insert(*temp);
 				}
 				for (Circle it : circles) {
 					vector<Point> temp = calLineCircleIst(segment, it);

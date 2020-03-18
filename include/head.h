@@ -77,6 +77,7 @@ public:
 
 	Ray() : Line(){
 		startPoint = Point();
+		type = 0;
 	}
 
 	bool vaild(Point A) {
