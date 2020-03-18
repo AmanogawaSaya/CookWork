@@ -7,6 +7,8 @@
 #include <set>
 #include<string>
 #include <unordered_set>
+#include<algorithm>
+using namespace std;
 
 #define EPS 1e-7
 
@@ -73,6 +75,50 @@ public:
 		f((int)(pow(x0, 2) + pow(y0, 2) - pow(r0, 2)))
 	{}
 
+};
+
+class Ray : public Line {
+public:
+	struct Point startPoint;
+	int type;
+
+	Ray(int x1, int y1, int x2, int y2) :Line(x1, y1, x2, y2) {
+		startPoint = Point(x1, y1);
+		if (x1 < x2 && y1 < y2) type = 1;
+		else if (x1 < x2 && y1 > y2) type = 2;
+		else if (x1 > x2 && y1 < y2) type = 3;
+		else if (x1 > x2 && y1 > y2) type = 4;
+		else if (x1 == x2) type = 5;
+		else if (y1 == y2) type = 6;
+		else type = 0;
+	}
+
+	bool vaild(Point A) {
+		return type == 1 && startPoint.x < A.x && startPoint.y < A.y
+			|| type == 2 && startPoint.x < A.x && startPoint.y > A.y
+			|| type == 3 && startPoint.x > A.x && startPoint.y < A.y
+			|| type == 4 && startPoint.x > A.x && startPoint.y > A.y
+			|| type == 5 && startPoint.y > A.y
+			|| type == 6 && startPoint.x > A.x;
+	}
+};
+
+class Segment : public Ray {
+public:
+	struct Point endPoint;
+
+	Segment(int x1, int y1, int x2, int y2) : Ray(x1, y1, x2, y2) {
+		endPoint = Point(x2, y2);
+	}
+
+	bool vaild(Point A) {
+		return type == 1 && startPoint.x < A.x && startPoint.y < A.y && endPoint.x > A.x && endPoint.y > A.y
+			|| type == 2 && startPoint.x < A.x && startPoint.y > A.y && endPoint.x > A.x && endPoint.y < A.y
+			|| type == 3 && startPoint.x > A.x && startPoint.y < A.y && endPoint.x < A.x && endPoint.y > A.y
+			|| type == 4 && startPoint.x > A.x && startPoint.y > A.y&& endPoint.x < A.x && endPoint.y < A.y
+			|| type == 5 && min(startPoint.y, endPoint.y) < A.y && max(startPoint.y, endPoint.y) > A.y
+			|| type == 6 && min(startPoint.x, endPoint.x) < A.x&& max(startPoint.x, endPoint.x) > A.x;
+	}
 };
 
 //hash of point set

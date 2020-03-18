@@ -198,6 +198,10 @@ int main(int argc, char* argv[]) {
 				}
 				lines.emplace_back(line);
 				break;
+			case 'R':
+
+			case 'S':
+
 			case 'C':
 				fileIn >> temp;
 				if(!isNum(temp)) throw INException();
