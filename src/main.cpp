@@ -50,11 +50,6 @@ Point* calLineLineIst(Line line1, Line line2) {
 
 	D = line1.a * line2.b - line2.a * line1.b;
 	if (D == 0) {
-		if (line1.isSame(line2)) {
-			if (line1.x1 == line2.x1 && line1.y1 == line2.y1) return new Point(line1.x1, line1.y1);
-			if (line1.x1 == line2.x2 && line1.y1 == line2.y2) return new Point(line1.x1, line1.y1);
-			if (line1.x2 == line2.x1 && line1.y2 == line2.y1) return new Point(line1.x2, line1.y2);
-		}
 		return NULL;
 	}
 	else {
@@ -131,7 +126,7 @@ vector<Point> calCircleCircleIst(Circle circle1, Circle circle2) {
 	vector<Point> point;
 	radiusSum = (int)pow(circle1.r + circle2.r, 2);
 	radiusDiff = (int)pow(circle1.r - circle2.r, 2);
-	centerDis = (int)(pow(circle1.x - circle2.x, 2) + pow(circle1.y - circle2.y, 2));
+	centerDis = (int)(pow(circle1.x - circle2.x, 2) + (int)pow(circle1.y - circle2.y, 2));
 
 	// not intersect
 	if (centerDis > radiusSum || centerDis < radiusDiff) {
@@ -234,7 +229,11 @@ int main(int argc, char* argv[]) {
 					if (temp && ray.vaild(*temp)) points.insert(*temp);
 				}
 				for (Ray it : rays) {
-					if (it.isCoincide(ray)) throw SLException();
+					if (it.isCoincide(ray) == 1) throw SLException();
+					else if (it.isCoincide(ray) > 1) {
+						points.insert(Point(ray.x1, ray.y1));
+						continue;
+					}
 					Point* temp = calLineLineIst(ray, it);
 					if (temp && it.vaild(*temp) && ray.vaild(*temp)) points.insert(*temp);
 				}
@@ -263,7 +262,15 @@ int main(int argc, char* argv[]) {
 					if (temp && it.vaild(*temp) && segment.vaild(*temp)) points.insert(*temp);
 				}
 				for (Segment it : segments) {
-					if (it.isCoincide(segment)) throw SLException();
+					if (it.isCoincide(segment) == 1) throw SLException();
+					else if (it.isCoincide(segment) == 2) {
+						points.insert(Point(it.x1, it.y1));
+						continue;
+					}
+					else if (it.isCoincide(segment) == 2) {
+						points.insert(Point(it.x2, it.y2));
+						continue;
+					}
 					Point *temp = calLineLineIst(segment, it);
 					if (temp && it.vaild(*temp) && segment.vaild(*temp)) points.insert(*temp);
 				}

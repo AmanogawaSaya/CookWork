@@ -70,87 +70,73 @@ public:
 
 class Ray : public Line {
 public:
-	struct Point startPoint;
-	int type;
 
-	Ray(int x1, int y1, int x2, int y2) :Line(x1, y1, x2, y2) {
-		startPoint = Point(x1, y1);
-		if (x1 < x2 && y1 < y2) type = 1;
-		else if (x1 < x2 && y1 > y2) type = 2;
-		else if (x1 > x2&& y1 > y2) type = 3;
-		else if (x1 > x2&& y1 < y2) type = 4;
-		else if (x1 == x2 && y1 < y2) type = 5;
-		else if (y1 == y2 && x1 < x2) type = 6;
-		else if (x1 == x2 && y1 > y2) type = 7;
-		else if (y1 == y2 && x1 > x2) type = 8;
-		else type = 0;
-	}
+	Ray(int x1, int y1, int x2, int y2) :Line(x1, y1, x2, y2) {}
 
-	Ray() : Line(){
-		startPoint = Point();
-		type = 0;
-	}
+	Ray() : Line(){}
 
 	int vaild(Point A) {
-		if (startPoint.x == A.x && startPoint.y == A.y) return 2;
-		else if (
-			type == 1 && startPoint.x < A.x && startPoint.y < A.y
-			|| type == 2 && startPoint.x < A.x && startPoint.y > A.y
-			|| type == 3 && startPoint.x > A.x&& startPoint.y > A.y
-			|| type == 4 && startPoint.x > A.x&& startPoint.y < A.y
-			|| type == 5 && startPoint.y < A.y
-			|| type == 6 && startPoint.x < A.x
-			|| type == 7 && startPoint.y > A.y
-			|| type == 8 && startPoint.x > A.x) 
+		/*和端点重合*/
+		if (A.x == x1 && A.y == y1) {
+			return 2;
+		}
+		/*在射线上*/
+		else if ((A.x - x1) * ((double)x2 - x1) >= 0 && (A.y - y1) * ((double)y2 - y1) >= 0) {
 			return 1;
+		} 
 		return 0;
 	}
 
-	bool isCoincide(Ray A) {
-		return Line::isSame(A) && (vaild(A.startPoint) == 1 || vaild(A.startPoint) == 2 && A.type == type);
+	int isCoincide(Ray A) {
+		if (isSame(A) ) {
+			/*方向相同*/
+			if ((A.x1 - A.x2) * (x1 - x2) >= 0 && (A.y1 - A.y2) * (y1 - y2) >= 0) {
+				return 1;
+			}
+			/*方向相反*/
+			else if ((A.x1 - A.x2) * (x1 - x2) <= 0 && (A.y1 - A.y2) * (y1 - y2) <= 0) {
+				return vaild(Point(A.x1, A.y1));
+			}
+		}
+		return 0;
 	}
 };
 
 class Segment : public Ray {
 public:
-	struct Point endPoint;
 
-	Segment() : Ray(){
-		endPoint = Point();
-	}
+	Segment() : Ray(){}
 
 	Segment(int x1, int y1, int x2, int y2) : Ray(x1, y1, x2, y2) {
-		endPoint = Point(x2, y2);
+		if (x1 > x2) {
+			int temp = x1;
+			x1 = x2;
+			x2 = temp;
+			temp = y1;
+			y1 = y2;
+			y2 = temp;
+		}
 	}
 
 	int vaild(Point A) {
-		if (startPoint.x == A.x && startPoint.y == A.y) return 3;
-		else if (endPoint.x == A.x && endPoint.y == A.y) return 2;
-		else if (
-			type == 1 && startPoint.x < A.x && startPoint.y < A.y && endPoint.x > A.x&& endPoint.y > A.y
-			|| type == 2 && startPoint.x < A.x && startPoint.y > A.y && endPoint.x > A.x&& endPoint.y < A.y
-			|| type == 3 && startPoint.x > A.x&& startPoint.y > A.y&& endPoint.x < A.x && endPoint.y < A.y
-			|| type == 4 && startPoint.x > A.x && startPoint.y < A.y && endPoint.x < A.x && endPoint.y > A.y
-			|| type == 5 && startPoint.y < A.y && endPoint.y > A.y
-			|| type == 6 && startPoint.x < A.x && endPoint.x > A.x
-			|| type == 7 && startPoint.y > A.y && endPoint.y < A.y
-			|| type == 8 && startPoint.x > A.x && endPoint.x < A.x)
-			return 1;
-		return 0;
+		/*和第一个端点重合*/
+		if (A.x == x1 && A.y == y1) return 2;
+		if (A.x == x2 && A.y == y2) return 3;
+		return (A.x - x1) * (A.x - x2) <= 0 && (A.y - y1) * (A.y - y2) <= 0;
 	}
 
-	bool isCoincide(Ray A) {
-		return Line::isSame(A) && (vaild(A.startPoint) == 1 
-			|| vaild(A.startPoint) == 3 && A.type == type 
-			||vaild(A.startPoint) == 2 && A.type != type);
+	int isCoincide(Ray A) {
+		if (!isSame(A)) return 0;
+
 	}
 
-	bool isCoincide(Segment A) {
-		return Line::isSame(A)
-			&& (vaild(A.startPoint) == 1
-				|| vaild(endPoint) == 1
-				|| vaild(A.startPoint) == 3 && type == A.type
-				|| vaild(A.endPoint) == 2 && type != A.type);
+	int isCoincide(Segment A) {
+		if (!isSame(A)) return 0;
+		int ret1 = vaild(Point(A.x1, A.y1));
+		int ret2 = vaild(Point(A.x2, A.y2));
+		if (ret1 == 1 || ret2 == 1) return 1;
+		if (ret1 > 1 && ret2 > 1) return 1;
+		return max(ret1, ret2);
 	}
 };
 
@@ -162,7 +148,7 @@ struct PointHash {
 	}
 };
 
-typedef std::set<Point> MySet;
+typedef std::unordered_set<Point, PointHash> MySet;
 
 __declspec(dllexport) bool isNum(std::string s);
 __declspec(dllexport) bool rangeVaild(int n);
