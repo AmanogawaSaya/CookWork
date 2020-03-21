@@ -50,3 +50,17 @@ public:
 		return "圆的半径不可以小于或等于0或者大于或等于100000";
 	}
 };
+
+class ArgumentError : public exception {
+public:
+	const string info() const throw() {
+		return "请检查命令格式: \n\tintersect.exe -i <input> -o <output>\n";
+	}
+};
+
+class FileError : public exception {
+public:
+	const string info() const throw() {
+		return "打开文件失败！";
+	}
+};

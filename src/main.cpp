@@ -148,31 +148,31 @@ vector<Point> calCircleCircleIst(Circle circle1, Circle circle2) {
 int main(int argc, char* argv[]) {
 	ifstream fileIn;
 	ofstream fileOut;
-	/*if (argc != 5) {
-		cout << "Please check your Format: \n\tintersect.exe -i <input> -o <output>\n";
+	try {
+		if (argc != 5) throw ArgumentError();
+
+		string fout_name;
+		for (int i = 0; i < argc; i++) {
+			if ((string)argv[i] == "-i") {
+				fileIn = ifstream(argv[i + 1]);
+			}
+			else if ((string)argv[i] == "-o") {
+				fileOut = ofstream(argv[i + 1]);
+				fout_name = argv[i + 1];
+			}
+		}
+
+		if (!fileIn) throw FileError();
+	}
+	catch (ArgumentError e) {
+		cout << e.info() << endl;
+		exit(0);
+	}
+	catch (FileError e) {
+		cout << e.info() << endl;
 		exit(0);
 	}
 
-	string fout_name;
-	for (int i = 0; i < argc; i++) {
-		if ((string)argv[i] == "-i") {
-			fileIn = ifstream(argv[i + 1]);
-		}
-		else if ((string)argv[i] == "-o") {
-			fileOut = ofstream(argv[i + 1]);
-			fout_name = argv[i + 1];
-		}
-	}
-
-	if (!fileIn) {
-		cout << "Please add your input file.";
-		exit(0);
-	}
-
-	cout << "Start working ......\n";
-	*/
-	fileIn = ifstream("input.txt");
-	fileOut = ofstream("output.txt");
 	
 	int N;
 	char type;
@@ -302,9 +302,6 @@ int main(int argc, char* argv[]) {
 		}
 		fileOut << points.size();
 		cout << points.size() << endl;
-		for (auto i : points) {
-			cout << i.x << " " << i.y << endl;
-		}
 	}
 	catch (INException e) { cout << e.info() << endl; }
 	catch (TFException e) { cout << e.info() << endl; }
@@ -312,7 +309,5 @@ int main(int argc, char* argv[]) {
 	catch (SLException e) { cout << e.info() << endl; }
 	catch (TException e) { cout << e.info() << endl; }
 	catch (RIException e) { cout << e.info() << endl; }
-
-	//cout << "Finish!!!   Result is in \"" << fout_name << "\"";
 	return 0;
 }
