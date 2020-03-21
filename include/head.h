@@ -164,16 +164,24 @@ struct PointHash {
 
 typedef std::set<Point> MySet;
 
-bool isNum(std::string s);
-bool rangeVaild(int n);
-void inputCheck(ifstream& fileIn, int& x1, int& y1, int& x2, int& y2);
-void inputCheck(ifstream& fileIn, int& x, int& y, int& r);
+__declspec(dllexport) bool isNum(std::string s);
+__declspec(dllexport) bool rangeVaild(int n);
+__declspec(dllexport) void inputCheck(ifstream& fileIn, int& x1, int& y1, int& x2, int& y2);
+__declspec(dllexport) void inputCheck(ifstream& fileIn, int& x, int& y, int& r);
 // calculate the intersections of two lines
-Point* calLineLineIst(Line line1, Line line2);
+__declspec(dllexport) Point* calLineLineIst(Line line1, Line line2);
 
 // calculate the intersections of line and Circle
-vector<Point> calLineCircleIst(Line line, Circle circle);
+__declspec(dllexport) vector<Point> calLineCircleIst(Line line, Circle circle);
 
 // calculate intersections of two circles
-vector<Point> calCircleCircleIst(Circle circle1, Circle circle2);
+__declspec(dllexport) vector<Point> calCircleCircleIst(Circle circle1, Circle circle2);
 
+
+__declspec(dllexport) vector<string> split(const string& str, const string& pattern);
+
+__declspec(dllexport) void inputCheck2(vector<string> input, int& x1, int& y1, int& x2, int& y2);
+
+__declspec(dllexport) void inputCheck2(vector<string> input, int& x, int& y, int& r);
+
+__declspec(dllexport) MySet result(vector<string> fileIn);
