@@ -126,8 +126,7 @@ public:
 	}
 
 	int isCoincide(Ray A) {
-		if (!isSame(A)) return 0;
-
+		return 0;
 	}
 
 	int isCoincide(Segment A) {

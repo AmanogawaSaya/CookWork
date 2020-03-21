@@ -63,10 +63,10 @@ Point* calLineLineIst(Line line1, Line line2) {
 
 // calculate the intersections of line and Circle
 vector<Point> calLineCircleIst(Line line, Circle circle) {
-	int intercept;
+	long long int intercept;
 	vector<Point> output;
 
-	intercept = (int)(pow(circle.r, 2) * (pow(line.a, 2) + pow(line.b, 2)) -
+	intercept = (pow(circle.r, 2) * (pow(line.a, 2) + pow(line.b, 2)) -
 		pow(line.a * circle.x + line.b * circle.y + line.c, 2));
 
 	if (intercept < 0) {
