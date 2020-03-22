@@ -140,35 +140,7 @@ vector<Point> calCircleCircleIst(Circle circle1, Circle circle2) {
 	return calLineCircleIst(line, circle1);
 }
 
-int main(int argc, char* argv[]) {
-	ifstream fileIn;
-	ofstream fileOut;
-	try {
-		if (argc != 5) throw ArgumentError();
-
-		string fout_name;
-		for (int i = 0; i < argc; i++) {
-			if ((string)argv[i] == "-i") {
-				fileIn = ifstream(argv[i + 1]);
-			}
-			else if ((string)argv[i] == "-o") {
-				fileOut = ofstream(argv[i + 1]);
-				fout_name = argv[i + 1];
-			}
-		}
-
-		if (!fileIn) throw FileError();
-	}
-	catch (ArgumentError e) {
-		cout << e.info() << endl;
-		exit(0);
-	}
-	catch (FileError e) {
-		cout << e.info() << endl;
-		exit(0);
-	}
-
-	
+void calculate(ifstream &fileIn, ofstream &fileOut) {
 	int N;
 	char type;
 	int x1 = 0, y1 = 0;
@@ -185,7 +157,7 @@ int main(int argc, char* argv[]) {
 
 	// set of intersections
 	MySet points;
-	
+
 	try {
 		string temp;
 		fileIn >> temp;
@@ -202,7 +174,7 @@ int main(int argc, char* argv[]) {
 				for (Line it : lines) {
 					if (line.isSame(it)) throw SLException(type, x1, y1, x2, y2, 'L', it.x1, it.y1, it.x2, it.y2);
 					Point* temp = calLineLineIst(line, it);
-					if(temp) points.insert(*temp);
+					if (temp) points.insert(*temp);
 				}
 				for (Ray it : rays) {
 					if (line.isSame(it)) throw SLException(type, x1, y1, x2, y2, 'R', it.x1, it.y1, it.x2, it.y2);
@@ -215,7 +187,7 @@ int main(int argc, char* argv[]) {
 					if (temp && it.vaild(*temp)) points.insert(*temp);
 				}
 				for (Circle it : circles) {
-					vector<Point> temp =  calLineCircleIst(line, it);
+					vector<Point> temp = calLineCircleIst(line, it);
 					for (Point i : temp) points.insert(i);
 				}
 				lines.emplace_back(line);
@@ -248,16 +220,16 @@ int main(int argc, char* argv[]) {
 				}
 				for (Circle it : circles) {
 					vector<Point> temp = calLineCircleIst(ray, it);
-					for (Point i : temp) if(ray.vaild(i)) points.insert(i);
+					for (Point i : temp) if (ray.vaild(i)) points.insert(i);
 				}
 				rays.emplace_back(ray);
 				break;
-			case 'S':				
+			case 'S':
 				inputCheck(fileIn, x1, y1, x2, y2);
 				segment = Segment(x1, y1, x2, y2);
 				for (Line it : lines) {
 					if (it.isSame(segment)) throw SLException(type, x1, y1, x2, y2, 'L', it.x1, it.y1, it.x2, it.y2);
-					Point *temp = calLineLineIst(segment, it);
+					Point* temp = calLineLineIst(segment, it);
 					if (temp && segment.vaild(*temp)) points.insert(*temp);
 				}
 				for (Ray it : rays) {
@@ -279,7 +251,7 @@ int main(int argc, char* argv[]) {
 						points.insert(Point(it.x2, it.y2));
 						continue;
 					}
-					Point *temp = calLineLineIst(segment, it);
+					Point* temp = calLineLineIst(segment, it);
 					if (temp && it.vaild(*temp) && segment.vaild(*temp)) points.insert(*temp);
 				}
 				for (Circle it : circles) {
@@ -324,5 +296,37 @@ int main(int argc, char* argv[]) {
 	catch (SLException e) { cout << e.info() << endl; }
 	catch (TException e) { cout << e.info() << endl; }
 	catch (RIException e) { cout << e.info() << endl; }
+}
+
+int commandLine(ifstream& fileIn, ofstream& fileOut, int argc, char*argv[]){
+	try {
+		if (argc != 5) throw ArgumentError();
+		for (int i = 0; i < argc; i++) {
+			if ((string)argv[i] == "-i") {
+				fileIn = ifstream(argv[i + 1]);
+			}
+			else if ((string)argv[i] == "-o") {
+				fileOut = ofstream(argv[i + 1]);
+			}
+		}
+
+		if (!fileIn) throw FileError();
+		return 0;
+	}
+	catch (ArgumentError e) {
+		cout << e.info() << endl;
+		return -1;
+	}
+	catch (FileError e) {
+		cout << e.info() << endl;
+		return -2;
+	}
+}
+
+int main(int argc, char* argv[]) {
+	ifstream fileIn;
+	ofstream fileOut;
+	int ret = commandLine(fileIn, fileOut, argc, argv);
+	if(ret == 0) calculate(fileIn, fileOut);
 	return 0;
 }

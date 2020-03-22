@@ -4,7 +4,6 @@
 #include"../include/head.h"
 #include"../include/FormatExpetion.h"
 using namespace std;
-__declspec(dllexport) 
 
 vector<string> split(const string& str, const string& pattern) {
 	vector<string> ret;
@@ -199,4 +198,12 @@ MySet result(vector<string> fileIn) {
 
 	//cout << "Finish!!!   Result is in \"" << fout_name << "\"";
 	return points;
+}
+
+MySet remove(vector<string> input) {
+
+}
+
+MySet add(vector<string> input) {
+
 }
