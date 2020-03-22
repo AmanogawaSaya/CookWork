@@ -66,8 +66,8 @@ vector<Point> calLineCircleIst(Line line, Circle circle) {
 	long long int intercept;
 	vector<Point> output;
 
-	intercept = (pow(circle.r, 2) * (pow(line.a, 2) + pow(line.b, 2)) -
-		pow(line.a * circle.x + line.b * circle.y + line.c, 2));
+	intercept = (long long int)((pow(circle.r, 2) * (pow(line.a, 2) + pow(line.b, 2)) -
+		pow(line.a * circle.x + line.b * circle.y + line.c, 2)));
 
 	if (intercept < 0) {
 		return output;
