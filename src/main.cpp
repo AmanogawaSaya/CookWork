@@ -200,17 +200,17 @@ int main(int argc, char* argv[]) {
 				inputCheck(fileIn, x1, y1, x2, y2);
 				line = Line(x1, y1, x2, y2);
 				for (Line it : lines) {
-					if (line.isSame(it)) throw SLException();
+					if (line.isSame(it)) throw SLException(type, x1, y1, x2, y2, 'L', it.x1, it.y1, it.x2, it.y2);
 					Point* temp = calLineLineIst(line, it);
 					if(temp) points.insert(*temp);
 				}
 				for (Ray it : rays) {
-					if (line.isSame(it)) throw SLException();
+					if (line.isSame(it)) throw SLException(type, x1, y1, x2, y2, 'R', it.x1, it.y1, it.x2, it.y2);
 					Point* temp = calLineLineIst(line, it);
 					if (temp && it.vaild(*temp)) points.insert(*temp);
 				}
 				for (Segment it : segments) {
-					if (line.isSame(it)) throw SLException();
+					if (line.isSame(it)) throw SLException(type, x1, y1, x2, y2, 'S', it.x1, it.y1, it.x2, it.y2);
 					Point* temp = calLineLineIst(line, it);
 					if (temp && it.vaild(*temp)) points.insert(*temp);
 				}
@@ -224,12 +224,12 @@ int main(int argc, char* argv[]) {
 				inputCheck(fileIn, x1, y1, x2, y2);
 				ray = Ray(x1, y1, x2, y2);
 				for (Line it : lines) {
-					if (it.isSame(ray)) throw SLException();
+					if (it.isSame(ray)) throw SLException(type, x1, y1, x2, y2, 'L', it.x1, it.y1, it.x2, it.y2);
 					Point* temp = calLineLineIst(ray, it);
 					if (temp && ray.vaild(*temp)) points.insert(*temp);
 				}
 				for (Ray it : rays) {
-					if (it.isCoincide(ray) == 1) throw SLException();
+					if (it.isCoincide(ray) == 1) throw SLException(type, x1, y1, x2, y2, 'R', it.x1, it.y1, it.x2, it.y2);
 					else if (it.isCoincide(ray) > 1) {
 						points.insert(Point(ray.x1, ray.y1));
 						continue;
@@ -238,7 +238,11 @@ int main(int argc, char* argv[]) {
 					if (temp && it.vaild(*temp) && ray.vaild(*temp)) points.insert(*temp);
 				}
 				for (Segment it : segments) {
-					if (it.isCoincide(ray)) throw SLException();
+					if (it.isCoincide(ray) == 1) throw SLException(type, x1, y1, x2, y2, 'S', it.x1, it.y1, it.x2, it.y2);
+					else if (it.isCoincide(ray) > 1) {
+						points.insert(Point(ray.x1, ray.y1));
+						continue;
+					}
 					Point* temp = calLineLineIst(ray, it);
 					if (temp && it.vaild(*temp) && ray.vaild(*temp)) points.insert(*temp);
 				}
@@ -252,22 +256,26 @@ int main(int argc, char* argv[]) {
 				inputCheck(fileIn, x1, y1, x2, y2);
 				segment = Segment(x1, y1, x2, y2);
 				for (Line it : lines) {
-					if (it.isSame(segment)) throw SLException();
+					if (it.isSame(segment)) throw SLException(type, x1, y1, x2, y2, 'L', it.x1, it.y1, it.x2, it.y2);
 					Point *temp = calLineLineIst(segment, it);
 					if (temp && segment.vaild(*temp)) points.insert(*temp);
 				}
 				for (Ray it : rays) {
-					if (it.isCoincide(segment)) throw SLException();
+					if (segment.isCoincide(it) == 1) throw SLException(type, x1, y1, x2, y2, 'R', it.x1, it.y1, it.x2, it.y2);
+					else if (segment.isCoincide(it) > 1) {
+						points.insert(Point(it.x1, it.y1));
+						continue;
+					}
 					Point* temp = calLineLineIst(segment, it);
 					if (temp && it.vaild(*temp) && segment.vaild(*temp)) points.insert(*temp);
 				}
 				for (Segment it : segments) {
-					if (it.isCoincide(segment) == 1) throw SLException();
+					if (it.isCoincide(segment) == 1) throw SLException(type, x1, y1, x2, y2, 'S', it.x1, it.y1, it.x2, it.y2);
 					else if (it.isCoincide(segment) == 2) {
 						points.insert(Point(it.x1, it.y1));
 						continue;
 					}
-					else if (it.isCoincide(segment) == 2) {
+					else if (it.isCoincide(segment) == 3) {
 						points.insert(Point(it.x2, it.y2));
 						continue;
 					}

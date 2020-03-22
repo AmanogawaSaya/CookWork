@@ -51,7 +51,10 @@ public:
 	}
 
 	bool isSame(Line B) {
-		return isParel(B) && a * B.c == c * B.a;
+		if (!isParel(B)) return 0;
+		if (a == 0) return B.b * c == B.c * b;
+		if (b == 0) return  B.a * c == B.c * a;
+		return B.b * c == B.c * b;
 	}
 };
 
@@ -109,12 +112,14 @@ public:
 
 	Segment(int x1, int y1, int x2, int y2) : Ray(x1, y1, x2, y2) {
 		if (x1 > x2) {
-			int temp = x1;
-			x1 = x2;
-			x2 = temp;
-			temp = y1;
-			y1 = y2;
-			y2 = temp;
+			this->x1 = x2;
+			this->y1 = y2;
+			this->x2 = x1;
+			this->y2 = y1;
+		}
+		else if (x1 == x2 && y1 > y2) {
+			this->y1 = y2;
+			this->y2 = y1;
 		}
 	}
 
@@ -126,6 +131,20 @@ public:
 	}
 
 	int isCoincide(Ray A) {
+		if (!isSame(A)) return 0;
+		int ret = vaild(Point(A.x1, A.y1));
+		bool sign1 = (A.x1 - A.x2) * (x1 - x2) >= 0 && (A.y1 - A.y2) * (y1 - y2) >= 0;
+		bool sign2 = (A.x1 - A.x2) * (x1 - x2) <= 0 && (A.y1 - A.y2) * (y1 - y2) <= 0;
+		if (sign1) {
+			if (ret == 3) return 3;
+			else if (ret >= 1) return 1;
+			else ret = 0;
+		}
+		if (sign2) {
+			if (ret == 2) return 2;
+			else if (ret >= 1) return 1;
+			else ret = 0;
+		}
 		return 0;
 	}
 
@@ -133,9 +152,14 @@ public:
 		if (!isSame(A)) return 0;
 		int ret1 = vaild(Point(A.x1, A.y1));
 		int ret2 = vaild(Point(A.x2, A.y2));
+		if (ret1 == 0 && ret2 == 0) return 0;
+		if (ret1 == 0 && ret2 == 2) return 2;
 		if (ret1 == 1 || ret2 == 1) return 1;
+		if (ret1 == 0 && ret2 == 3) return 1;
+		if (ret1 == 2 && ret2 == 0) return 1;
 		if (ret1 > 1 && ret2 > 1) return 1;
-		return max(ret1, ret2);
+		if (ret1 == 3 && ret2 == 0) return 3;
+		return 0;
 	}
 };
 

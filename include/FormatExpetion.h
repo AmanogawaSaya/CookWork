@@ -22,6 +22,11 @@ public:
 /*Same Line*/
 class SLException : public exception {
 public:
+	SLException(char a, int x1, int y1, int x2, int y2, char b, int x3, int y3, int x4, int y4) {
+		cout << a << "(" << x1 << "," << y1 << "," << x2 << "," << y2 << ")" << endl;
+		cout << b << "(" << x3 << "," << y3 << "," << x4 << "," << y4 << ")" << endl;
+	}
+	SLException(){}
 	const string info() const throw() {
 		return "有两个几何图形之间有无穷的交点";
 	}
