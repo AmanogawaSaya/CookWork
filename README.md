@@ -3,7 +3,9 @@
 | -i       | 带一个参数，表示输入文件的路径（绝对或相对路径） | `intersect.exe -i input.txt -o output.txt` | `CoopWorkGUI.exe -i input.txt -o output.txt` |
 | -o       | 带一个参数，表示输出文件的路径（绝对或相对路径） | `intersect.exe -i input.txt -o output.txt` | `CoopWorkGUI.exe -i input.txt -o output.txt` |
 
-#封装过的GUI地址：https://github.com/AmanogawaSaya/IntersectGUI
+
+
+# 封装过的GUI地址：https://github.com/AmanogawaSaya/IntersectGUI
 
 
 
