@@ -10,17 +10,14 @@ void solve(vector <pair<double, double> >& realIntersections) {
 	MySet points;
 	for (Line line : lineAll) {
 		for (Line it : lineAll) {
-			if (line.isSame(it)) throw SLException();
 			Point* temp = calLineLineIst(line, it);
 			if (temp) points.insert(*temp);
 		}
 		for (Ray it : rayAll) {
-			if (line.isSame(it)) throw SLException();
 			Point* temp = calLineLineIst(line, it);
 			if (temp && it.vaild(*temp)) points.insert(*temp);
 		}
 		for (Segment it : segmentAll) {
-			if (line.isSame(it)) throw SLException();
 			Point* temp = calLineLineIst(line, it);
 			if (temp && it.vaild(*temp)) points.insert(*temp);
 		}
@@ -30,18 +27,11 @@ void solve(vector <pair<double, double> >& realIntersections) {
 		}
 	}
 	for (Ray ray : rayAll) {
-		for (Line it : lineAll) {
-			if (it.isSame(ray)) throw SLException();
-			Point* temp = calLineLineIst(ray, it);
-			if (temp && ray.vaild(*temp)) points.insert(*temp);
-		}
 		for (Ray it : rayAll) {
-			if (it.isCoincide(ray)) throw SLException();
 			Point* temp = calLineLineIst(ray, it);
 			if (temp && it.vaild(*temp) && ray.vaild(*temp)) points.insert(*temp);
 		}
 		for (Segment it : segmentAll) {
-			if (it.isCoincide(ray)) throw SLException();
 			Point* temp = calLineLineIst(ray, it);
 			if (temp && it.vaild(*temp) && ray.vaild(*temp)) points.insert(*temp);
 		}
@@ -51,18 +41,7 @@ void solve(vector <pair<double, double> >& realIntersections) {
 		}
 	}
 	for (Segment segment : segmentAll) {
-		for (Line it : lineAll) {
-			if (it.isSame(segment)) throw SLException();
-			Point* temp = calLineLineIst(segment, it);
-			if (temp && segment.vaild(*temp)) points.insert(*temp);
-		}
-		for (Ray it : rayAll) {
-			if (it.isCoincide(segment)) throw SLException();
-			Point* temp = calLineLineIst(segment, it);
-			if (temp && it.vaild(*temp) && segment.vaild(*temp)) points.insert(*temp);
-		}
 		for (Segment it : segmentAll) {
-			if (it.isCoincide(segment)) throw SLException();
 			Point* temp = calLineLineIst(segment, it);
 			if (temp && it.vaild(*temp) && segment.vaild(*temp)) points.insert(*temp);
 		}
@@ -72,20 +51,8 @@ void solve(vector <pair<double, double> >& realIntersections) {
 		}
 	}
 	for (Circle circle : circleAll) {
-		for (Line it : lineAll) {
-			vector<Point> temp = calLineCircleIst(it, circle);
-			for (Point i : temp) points.insert(i);
-		}
-		for (Ray it : rayAll) {
-			vector<Point> temp = calLineCircleIst(it, circle);
-			for (Point i : temp) if (it.vaild(i)) points.insert(i);
-		}
-		for (Segment it : segmentAll) {
-			vector<Point> temp = calLineCircleIst(it, circle);
-			for (Point i : temp) if (it.vaild(i)) points.insert(i);
-		}
 		for (Circle it : circleAll) {
-			if (it.x == circle.x && it.y == circle.y && it.r == circle.r) throw SLException();
+			if (it.x == circle.x && it.y == circle.y && it.r == circle.r) continue;
 			vector<Point> temp = calCircleCircleIst(it, circle);
 			for (Point i : temp) points.insert(i);
 		}
@@ -184,7 +151,7 @@ void deleteCircle(double c1, double c2, double r) {
 	}
 }
 
-void deteleAll() {
+void deleteAll() {
 	lineAll.clear();
 	rayAll.clear();
 	segmentAll.clear();

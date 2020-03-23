@@ -1,5 +1,6 @@
 ﻿#include "../include/head.h"
 #include "../include/FormatExpetion.h"
+#include "../include/combine.h"
 
 using namespace std;
 
@@ -330,4 +331,12 @@ int main(int argc, char* argv[]) {
 	int ret = commandLine(fileIn, fileOut, argc, argv);
 	if(ret == 0) calculate(fileIn, fileOut);
 	return 0;
+#if 0
+	vector<pair<double, double>> temp;
+	ioHandler("input.txt");
+	solve(temp);
+	for (auto i : temp) {
+		cout << i.first << " " << i.second << endl;
+	}
+#endif
 }
