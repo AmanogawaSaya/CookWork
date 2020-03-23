@@ -44,7 +44,7 @@ public:
 class INException : public exception {
 public:
 	const string info() const throw() {
-		return "坐标请输入一个(-100000, 100000)之间的无前导0标准整数";
+		return "坐标或N请输入一个(-100000, 100000)之间的无前导0标准整数";
 	}
 };
 

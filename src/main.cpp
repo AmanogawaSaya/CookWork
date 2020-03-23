@@ -315,9 +315,11 @@ int main(int argc, char* argv[]) {
 	}
 	catch (ArgumentError e) {
 		cout << e.info() << endl;
+		exit(0);
 	}
 	catch (FileError e) {
 		cout << e.info() << endl;
+		exit(0);
 	}
 	calculate(fileIn, fileOut);
 	return 0;
