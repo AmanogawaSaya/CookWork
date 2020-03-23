@@ -185,7 +185,7 @@ __declspec(dllexport) vector<Point> calLineCircleIst(Line line, Circle circle);
 
 // calculate intersections of two circles
 __declspec(dllexport) vector<Point> calCircleCircleIst(Circle circle1, Circle circle2);
-__declspec(dllexport) void calculate(ifstream& fileIn, ofstream& fileOut);
+__declspec(dllexport) MySet calculate(ifstream& fileIn, ofstream& fileOut);
 
 __declspec(dllexport) vector<string> split(const string& str, const string& pattern);
 

@@ -140,7 +140,7 @@ vector<Point> calCircleCircleIst(Circle circle1, Circle circle2) {
 	return calLineCircleIst(line, circle1);
 }
 
-void calculate(ifstream &fileIn, ofstream &fileOut) {
+MySet calculate(ifstream &fileIn, ofstream &fileOut) {
 	int N;
 	char type;
 	int x1 = 0, y1 = 0;
@@ -296,6 +296,7 @@ void calculate(ifstream &fileIn, ofstream &fileOut) {
 	catch (SLException e) { cout << e.info() << endl; }
 	catch (TException e) { cout << e.info() << endl; }
 	catch (RIException e) { cout << e.info() << endl; }
+	return points;
 }
 
 int commandLine(ifstream& fileIn, ofstream& fileOut, int argc, char*argv[]){
