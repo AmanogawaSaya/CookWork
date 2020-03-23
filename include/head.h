@@ -195,6 +195,4 @@ __declspec(dllexport) void inputCheck2(vector<string> input, int& x, int& y, int
 
 __declspec(dllexport) MySet result(vector<string> fileIn);
 
-__declspec(dllexport) int commandLine(ifstream& fileIn, ofstream& fileOut, int argc, char* argv[]);
-
 __declspec(dllexport) int main(int argc, char* argv[]);

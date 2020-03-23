@@ -298,7 +298,9 @@ void calculate(ifstream &fileIn, ofstream &fileOut) {
 	catch (RIException e) { cout << e.info() << endl; }
 }
 
-int commandLine(ifstream& fileIn, ofstream& fileOut, int argc, char*argv[]){
+int main(int argc, char* argv[]) {
+	ifstream fileIn;
+	ofstream fileOut;
 	try {
 		if (argc != 5) throw ArgumentError();
 		for (int i = 0; i < argc; i++) {
@@ -309,24 +311,14 @@ int commandLine(ifstream& fileIn, ofstream& fileOut, int argc, char*argv[]){
 				fileOut = ofstream(argv[i + 1]);
 			}
 		}
-
 		if (!fileIn) throw FileError();
-		return 0;
 	}
 	catch (ArgumentError e) {
 		cout << e.info() << endl;
-		return -1;
 	}
 	catch (FileError e) {
 		cout << e.info() << endl;
-		return -2;
 	}
-}
-
-int main(int argc, char* argv[]) {
-	ifstream fileIn;
-	ofstream fileOut;
-	int ret = commandLine(fileIn, fileOut, argc, argv);
-	if(ret == 0) calculate(fileIn, fileOut);
+	calculate(fileIn, fileOut);
 	return 0;
 }
