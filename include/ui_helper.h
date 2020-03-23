@@ -5,6 +5,8 @@
 #include"../include/FormatExpetion.h"
 using namespace std;
 
+
+
 vector<string> split(const string& str, const string& pattern) {
 	vector<string> ret;
 	if (pattern.empty())
@@ -185,9 +187,6 @@ MySet result(vector<string> fileIn) {
 			}
 		}
 		cout << points.size() << endl;
-		for (auto i : points) {
-			cout << i.x << " " << i.y << endl;
-		}
 	}
 	catch (INException e) { cout << e.info() << endl; }
 	catch (TFException e) { cout << e.info() << endl; }
@@ -198,12 +197,4 @@ MySet result(vector<string> fileIn) {
 
 	//cout << "Finish!!!   Result is in \"" << fout_name << "\"";
 	return points;
-}
-
-MySet remove(vector<string> input) {
-
-}
-
-MySet add(vector<string> input) {
-
 }
