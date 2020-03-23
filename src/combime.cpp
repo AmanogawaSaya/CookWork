@@ -6,7 +6,7 @@ vector<Ray> rayAll;
 vector<Segment> segmentAll;
 vector<Circle> circleAll;
 
-void solve(vector <pair<double, double> >& realIntersections) {
+void  __cdecl solve(vector <pair<double, double> >& realIntersections) {
 	MySet points;
 	for (Line line : lineAll) {
 		for (Line it : lineAll) {
@@ -63,7 +63,7 @@ void solve(vector <pair<double, double> >& realIntersections) {
 	cout << points.size() << endl;
 }
 
-void ioHandler(string input) {
+void  __cdecl ioHandler(string input) {
 	ifstream inputfile(input);
 	int n;
 	inputfile >> n;
@@ -91,15 +91,15 @@ void ioHandler(string input) {
 	}
 }
 
-void addLine(double x1, double y1, double x2, double y2, int type) {
+void __cdecl  addLine(double x1, double y1, double x2, double y2, int type) {
 	switch (type) {
-	case 'L':
+	case 0:
 		lineAll.push_back(Line(x1, y1, x2, y2));
 		break;
-	case 'R':
+	case 1:
 		rayAll.push_back(Ray(x1, y1, x2, y2));
 		break;
-	case 'S':
+	case 2:
 		segmentAll.push_back(Segment(x1, y1, x2, y2));
 		break;
 	default:
@@ -107,9 +107,9 @@ void addLine(double x1, double y1, double x2, double y2, int type) {
 	}
 }
 
-void deleteLine(double x1, double y1, double x2, double y2, int type) {
+void  __cdecl deleteLine(double x1, double y1, double x2, double y2, int type) {
 	switch (type) {
-	case 'L':
+	case 0:
 		for (vector<Line>::iterator it = lineAll.begin(); it != lineAll.end();) {
 			if (it->x1 == x1 && it->x2 == x2 && it->y1 == y1 && it->y2 == y2)
 				it = lineAll.erase(it); 
@@ -117,7 +117,7 @@ void deleteLine(double x1, double y1, double x2, double y2, int type) {
 				++it;
 		}
 		break;
-	case 'R':
+	case 1:
 		for (vector<Ray>::iterator it = rayAll.begin(); it != rayAll.end();) {
 			if (it->x1 == x1 && it->x2 == x2 && it->y1 == y1 && it->y2 == y2)
 				it = rayAll.erase(it);
@@ -125,7 +125,7 @@ void deleteLine(double x1, double y1, double x2, double y2, int type) {
 				++it;
 		}
 		break;
-	case 'S':
+	case 2:
 		for (vector<Segment>::iterator it = segmentAll.begin(); it != segmentAll.end();) {
 			if (it->x1 == x1 && it->x2 == x2 && it->y1 == y1 && it->y2 == y2)
 				it = segmentAll.erase(it);
@@ -138,11 +138,11 @@ void deleteLine(double x1, double y1, double x2, double y2, int type) {
 	}
 }
 
-void addCircle(double c1, double c2, double r) {
+void  __cdecl addCircle(double c1, double c2, double r) {
 	circleAll.push_back(Circle(c1, c2, r));
 }
 
-void deleteCircle(double c1, double c2, double r) {
+void  __cdecl deleteCircle(double c1, double c2, double r) {
 	for (vector<Circle>::iterator it = circleAll.begin(); it != circleAll.end();) {
 		if (it->x == c1 && it->y == c2 && it->r == r)
 			it = circleAll.erase(it);
@@ -151,7 +151,7 @@ void deleteCircle(double c1, double c2, double r) {
 	}
 }
 
-void deleteAll() {
+void  __cdecl deleteAll() {
 	lineAll.clear();
 	rayAll.clear();
 	segmentAll.clear();

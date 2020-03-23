@@ -326,17 +326,17 @@ int commandLine(ifstream& fileIn, ofstream& fileOut, int argc, char*argv[]){
 }
 
 int main(int argc, char* argv[]) {
-#if 0
 	ifstream fileIn;
 	ofstream fileOut;
 	int ret = commandLine(fileIn, fileOut, argc, argv);
 	if(ret == 0) calculate(fileIn, fileOut);
 	return 0;
-#endif
-#if 1
+#if 0
 	vector<pair<double, double>> temp;
-	addCircle(0, 0, 3);
-	addLine(0, 0, 1, 1, 0);
+	ioHandler("input.txt");
 	solve(temp);
+	for (auto i : temp) {
+		cout << i.first << " " << i.second << endl;
+	}
 #endif
 }
