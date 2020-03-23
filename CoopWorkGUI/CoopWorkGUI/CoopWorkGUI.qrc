@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/CoopWorkGUI">
+        <file>Resources/icon.ico</file>
+        <file>Resources/title.png</file>
+    </qresource>
+</RCC>
