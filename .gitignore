@@ -40,7 +40,6 @@ Debug
 *.iobj
 *.ipdb
 *.ilk
-Release
 x64
 
 #myignore
