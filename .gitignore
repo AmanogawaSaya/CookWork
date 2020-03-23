@@ -35,6 +35,13 @@ Debug
 *.pdb
 *.tlog
 .opencppcov
+*.exp
+*.lib
+*.iobj
+*.ipdb
+*.ilk
+Release
+x64
 
 #myignore
 .idea
@@ -44,7 +51,3 @@ check
 *.txt
 *.py
 *.bat
-*.exp
-*.lib
-*..iobj
-*..ipdb
