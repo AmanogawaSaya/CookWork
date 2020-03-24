@@ -36,7 +36,6 @@ Debug
 *.tlog
 .opencppcov
 *.exp
-*.lib
 *.iobj
 *.ipdb
 *.ilk
