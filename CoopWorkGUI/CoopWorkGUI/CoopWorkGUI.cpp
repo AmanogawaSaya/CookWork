@@ -3,12 +3,16 @@
 CoopWorkGUI::CoopWorkGUI(QWidget *parent)
 	: QWidget(parent)
 {
+	
 	ui.setupUi(this);
 
 	//½ûÖ¹´°¿ÚËõ·Å
 	this->setWindowFlags(windowFlags()& ~Qt::WindowMaximizeButtonHint);
 	this->setFixedSize(this->width(), this->height());
 	
+	this->setWindowIcon(QIcon(":/CoopWorkGUI/Resources/title.png"));
+	this->setWindowTitle("LJC&FUJI");
+
 	//ÉèÖÃÁÐ±íÏî£ºË«»÷±à¼­
 	connect(ui.listWidget, &QListWidget::itemDoubleClicked, this, &CoopWorkGUI::editListItem);
 
@@ -159,6 +163,8 @@ void CoopWorkGUI::painteGraphics()
 
 	painter.scale(1, -1);
 
+	deleteAll();
+
 	//ÖðÐÐ»­Í¼
 	pen.setStyle(Qt::SolidLine);
 	pen.setColor(QColor(0, 0, 0));
@@ -181,6 +187,7 @@ void CoopWorkGUI::painteGraphics()
 			long long int a = y1 - y2;
 			long long int b = x2 - x1;
 			long long int c = x1 * y2 - x2 * y1;
+			addLine(x1, y1, x2, y2, 0);
 			if (b == 0) {
 				painter.drawLine(QPoint(x1 * m_scale, -200000 * m_scale), QPoint(x2 * m_scale, 200000 * m_scale));
 			}
@@ -196,6 +203,7 @@ void CoopWorkGUI::painteGraphics()
 			long long int a = y1 - y2;
 			long long int b = x2 - x1;
 			long long int c = x1 * y2 - x2 * y1;
+			addLine(x1, y1, x2, y2, 1);
 			if (b == 0) {
 				painter.drawLine(QPoint(x1 * m_scale, y1 * m_scale), QPoint(x2 * m_scale, 200000 * m_scale));
 			}
@@ -208,41 +216,31 @@ void CoopWorkGUI::painteGraphics()
 			}
 		}
 		else if (paras.at(0) == "S") {
+			addLine(paras.at(1).toInt(), paras.at(2).toInt(), paras.at(3).toInt(), paras.at(4).toInt(), 2);
 			painter.drawLine(QPoint(paras.at(1).toInt() * m_scale, paras.at(2).toInt() * m_scale),
 				QPoint(paras.at(3).toInt() * m_scale, paras.at(4).toInt() * m_scale));
 		}
 		else if (paras.at(0) == "C") {
+			addCircle(paras.at(1).toInt(), paras.at(2).toInt(), paras.at(3).toInt());
 			painter.drawEllipse(QPoint(paras.at(1).toInt() * m_scale, paras.at(2).toInt() * m_scale),
 				paras.at(3).toInt() * m_scale, paras.at(3).toInt() * m_scale);
 		}
 		else {
 		}
 	}
-
+	
 	if (!ui.radioButton->isChecked()) { return;	}
-
 	pen.setColor(QColor(255, 0, 0));
-	pen.setWidth(3);
+	pen.setWidth(5);
 	painter.setPen(pen);
-	qDebug() << s_graphics.size();
-	if (s_graphics.size() > 0) {
-		s_graphics.insert(s_graphics.begin(), to_string(s_graphics.size()));
-		for (int i = 0; i < s_graphics.size(); i++) {
-			qDebug() << QString::fromStdString(s_graphics.at(i));
-		}
-		try {
-			m_Points = result(s_graphics);
-			qDebug() << m_Points.size();
-			for each (Point var in m_Points) {
-				painter.drawPoint(QPointF(var.x * m_scale, var.y * m_scale));
-				qDebug() << var.x << var.y;
-			}
-			ui.label->setText("Total: " + QString::number(m_Points.size()));
-		}
-		catch (const std::exception& e) {
-			qDebug() << e.what();
-		}
+	vector < pair<double, double> > realIntersections;
+	solve(realIntersections);
+	qDebug() << realIntersections.size();
+	for each (pair<double, double> var in realIntersections) {
+		painter.drawPoint(var.first* m_scale, var.second* m_scale);
 	}
+	ui.label->setText("Total: " + QString::number(realIntersections.size()));
+
 }
 
 void CoopWorkGUI::resizeWidget(int value) 
